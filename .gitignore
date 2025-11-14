@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model files (too large for GitHub)
+*.pt
+*.pth
+*.onnx
+*.h5
+
+# Data (too large for GitHub)
+data/
+tb_data/
+*.zip
+*.tar.gz
+
+# Gradio app (will be pushed to HF Space separately)
+gradio_app/
+app.py
+app_*.py
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# Keep checkpoints directory structure but not the large files
+checkpoints/*.pt
+checkpoints/*.pth
+
+# Allow metrics files (small)
+!checkpoints/metrics_ast.csv
+!checkpoints/metrics_ast.jsonl
+!checkpoints/resume_meta.pt

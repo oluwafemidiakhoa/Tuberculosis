@@ -60,12 +60,30 @@ class ChestXRayDataset(Dataset):
 
     def __getitem__(self, idx):
         img_path, label = self.samples[idx]
-        image = Image.open(img_path).convert('RGB')
 
-        if self.transform:
-            image = self.transform(image)
+        # Try to load image, skip if corrupted
+        max_attempts = 10
+        for attempt in range(max_attempts):
+            try:
+                image = Image.open(img_path).convert('RGB')
 
-        return image, label
+                if self.transform:
+                    image = self.transform(image)
+
+                return image, label
+
+            except Exception as e:
+                if attempt == 0:
+                    print(f"\nWarning: Corrupted image found: {img_path}")
+                    print(f"  Error: {e}")
+                    print(f"  Skipping to next image...")
+
+                # Try next random image from same class
+                idx = (idx + 1) % len(self.samples)
+                img_path, label = self.samples[idx]
+
+        # If all attempts fail, raise error
+        raise RuntimeError(f"Failed to load valid image after {max_attempts} attempts")
 
 # Transforms
 train_transform = transforms.Compose([

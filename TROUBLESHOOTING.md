@@ -240,9 +240,43 @@ MessageError: TypeError: Failed to fetch
 - Pneumonia → TB misclassification
 
 **Solutions**:
-1. Check if using best model:
+1. Check if using best model with proper loading:
+
+   **Option A: Use the helper utility (recommended)**
    ```python
-   model.load_state_dict(torch.load('checkpoints_multiclass/best.pt'))
+   from load_checkpoint_utils import load_model_from_checkpoint
+
+   model = load_model_from_checkpoint(model, 'checkpoints_multiclass/best.pt', device)
+   ```
+
+   **Option B: Manual loading**
+   ```python
+   # Load checkpoint with proper key handling
+   checkpoint = torch.load('checkpoints_multiclass/best.pt', map_location=device)
+
+   # Handle different checkpoint formats
+   if isinstance(checkpoint, dict):
+       if 'model' in checkpoint:
+           state_dict = checkpoint['model']
+       else:
+           state_dict = checkpoint
+
+       # Remove 'model.' prefix from keys if present
+       new_state_dict = {}
+       for key, value in state_dict.items():
+           if key.startswith('model.'):
+               new_key = key[6:]  # Remove 'model.' prefix
+               new_state_dict[new_key] = value
+           elif key == 'activation_mask':
+               continue  # Skip non-model keys
+           else:
+               new_state_dict[key] = value
+
+       state_dict = new_state_dict
+   else:
+       state_dict = checkpoint
+
+   model.load_state_dict(state_dict)
    ```
 
 2. Verify test data is correct:

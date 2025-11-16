@@ -57,6 +57,19 @@ app_*.py
 .DS_Store
 Thumbs.db
 
+# Security - Never commit sensitive files
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+config/secrets.yml
+.aws/
+.ssh/
+
 # Keep checkpoints directory structure but not the large files
 checkpoints/*.pt
 checkpoints/*.pth

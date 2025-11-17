@@ -120,8 +120,9 @@ class AdaptiveSparseModel(nn.Module):
     def __init__(self, num_classes, target_activation_rate=0.10):
         super().__init__()
 
-        # Load pretrained EfficientNet
-        self.model = models.efficientnet_b0(pretrained=True)
+        # Load pretrained EfficientNet with modern API
+        from torchvision.models import EfficientNet_B0_Weights
+        self.model = models.efficientnet_b0(weights=EfficientNet_B0_Weights.IMAGENET1K_V1)
 
         # Replace classifier
         in_features = self.model.classifier[1].in_features

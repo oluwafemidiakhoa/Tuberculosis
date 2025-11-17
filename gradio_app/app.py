@@ -31,11 +31,66 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = models.efficientnet_b0(weights=None)
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)  # 4 classes
 
-try:
-    model.load_state_dict(torch.load('checkpoints/best_multiclass.pt', map_location=device))
-    print("✅ Multi-class model loaded successfully!")
-except Exception as e:
-    print(f"⚠️  Error loading model: {e}")
+# Try multiple possible model paths
+model_paths = [
+    'checkpoints/best_multiclass.pt',
+    '../checkpoints/best_multiclass.pt',
+    'best.pt',
+    '../best.pt',
+    '../checkpoints_multiclass/best.pt',
+    '../checkpoints_multiclass_optimized/best.pt',
+]
+
+model_loaded = False
+for model_path in model_paths:
+    try:
+        checkpoint = torch.load(model_path, map_location=device)
+
+        # Handle different checkpoint formats
+        if isinstance(checkpoint, dict):
+            if 'model_state_dict' in checkpoint:
+                state_dict = checkpoint['model_state_dict']
+                print(f"📊 Loaded checkpoint from epoch {checkpoint.get('epoch', 'unknown')}")
+                if 'val_acc' in checkpoint:
+                    print(f"   Validation accuracy: {checkpoint['val_acc']:.2f}%")
+            elif 'state_dict' in checkpoint:
+                state_dict = checkpoint['state_dict']
+            else:
+                state_dict = checkpoint
+        else:
+            state_dict = checkpoint
+
+        # Clean state dict (remove "model." prefix if present)
+        clean_state_dict = {}
+        for key, value in state_dict.items():
+            if key.startswith('model.'):
+                clean_state_dict[key.replace('model.', '')] = value
+            elif key != 'activation_mask':  # Skip AST-specific tensors
+                clean_state_dict[key] = value
+
+        model.load_state_dict(clean_state_dict, strict=False)
+        print(f"✅ Model loaded successfully from: {model_path}")
+        model_loaded = True
+        break
+    except FileNotFoundError:
+        continue
+    except Exception as e:
+        print(f"⚠️  Error loading {model_path}: {e}")
+        continue
+
+if not model_loaded:
+    print("\n" + "="*70)
+    print("⚠️  WARNING: NO TRAINED MODEL FOUND!")
+    print("="*70)
+    print("The model is using random weights and will give incorrect predictions!")
+    print("\nTo fix this, you need to:")
+    print("1. Train a model using: python train_multiclass_simple.py")
+    print("2. OR place your trained 'best.pt' file in the 'checkpoints/' directory")
+    print("3. OR run from parent directory where checkpoints/ folder exists")
+    print("\nExpected model file locations:")
+    for path in model_paths[:3]:
+        print(f"   - {path}")
+    print("="*70 + "\n")
 
 model = model.to(device)
 model.eval()

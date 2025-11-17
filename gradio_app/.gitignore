@@ -1,0 +1,11 @@
+# Model weights (large files)
+checkpoints/*.pt
+checkpoints/*.pth
+
+# Cache
+__pycache__/
+*.pyc
+.gradio/
+
+# Examples (add later if needed)
+# examples/

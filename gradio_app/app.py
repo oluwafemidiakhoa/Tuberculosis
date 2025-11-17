@@ -32,10 +32,20 @@ model = models.efficientnet_b0(weights=None)
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)  # 4 classes
 
 try:
-    model.load_state_dict(torch.load('checkpoints/best_multiclass.pt', map_location=device))
-    print("✅ Multi-class model loaded successfully!")
+    # Try loading best.pt from root directory (HuggingFace Spaces location)
+    model.load_state_dict(torch.load('best.pt', map_location=device))
+    print("✅ Multi-class model loaded successfully from best.pt!")
 except Exception as e:
-    print(f"⚠️  Error loading model: {e}")
+    print(f"⚠️  Error loading model from best.pt: {e}")
+    try:
+        # Fallback to checkpoints directory
+        model.load_state_dict(torch.load('checkpoints/best_multiclass.pt', map_location=device))
+        print("✅ Multi-class model loaded successfully from checkpoints/best_multiclass.pt!")
+    except Exception as e2:
+        print(f"❌ CRITICAL ERROR: Could not load model from any location!")
+        print(f"   - best.pt error: {e}")
+        print(f"   - checkpoints/best_multiclass.pt error: {e2}")
+        raise RuntimeError("Model file not found! Please ensure best.pt is uploaded to the Space.")
 
 model = model.to(device)
 model.eval()
@@ -136,13 +146,19 @@ def predict_chest_xray(image, show_gradcam=True):
 
     # Get probabilities
     probs = torch.softmax(output, dim=1)[0].cpu().detach().numpy()
+
+    # Safety check: ensure probabilities sum to ~1.0
+    prob_sum = np.sum(probs)
+    if not (0.99 <= prob_sum <= 1.01):
+        print(f"⚠️ WARNING: Probability sum is {prob_sum}, not 1.0. Model may not be loaded correctly!")
+
     pred_class = int(output.argmax(dim=1).item())
     pred_label = CLASSES[pred_class]
     confidence = float(probs[pred_class]) * 100
 
-    # Create results
+    # Create results - ensure values are between 0-100
     results = {
-        CLASSES[i]: float(probs[i] * 100) for i in range(len(CLASSES))
+        CLASSES[i]: float(min(100.0, max(0.0, probs[i] * 100))) for i in range(len(CLASSES))
     }
 
     # Generate visualizations

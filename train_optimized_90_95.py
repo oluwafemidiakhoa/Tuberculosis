@@ -443,9 +443,13 @@ for epoch in range(1, CONFIG['epochs'] + 1):
     # Save best model
     if val_acc > best_val_acc:
         best_val_acc = val_acc
+        # Save only the inner EfficientNet model state_dict (compatible with inference app)
+        torch.save(model.model.state_dict(),
+                  Path(CONFIG['checkpoint_dir']) / 'best.pt')
+        # Also save training checkpoint with metadata
         torch.save({
             'epoch': epoch,
-            'model_state_dict': model.state_dict(),
+            'model_state_dict': model.model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'val_acc': val_acc,
             'val_loss': val_loss,
@@ -453,12 +457,12 @@ for epoch in range(1, CONFIG['epochs'] + 1):
                 cls: 100.*class_correct[i]/class_total[i] if class_total[i] > 0 else 0
                 for i, cls in enumerate(CLASSES)
             }
-        }, Path(CONFIG['checkpoint_dir']) / 'best.pt')
+        }, Path(CONFIG['checkpoint_dir']) / 'best_with_metadata.pt')
         print(f"  ✓ New best model saved! (Val Acc: {val_acc:.2f}%)")
 
     # Save checkpoint periodically
     if epoch % CONFIG['save_frequency'] == 0:
-        torch.save(model.state_dict(),
+        torch.save(model.model.state_dict(),
                   Path(CONFIG['checkpoint_dir']) / f'checkpoint_epoch{epoch}.pt')
 
     print("-" * 80)
@@ -467,8 +471,8 @@ for epoch in range(1, CONFIG['epochs'] + 1):
 # Training Complete
 # ========================================================================
 
-# Save final model
-torch.save(model.state_dict(), Path(CONFIG['checkpoint_dir']) / 'final.pt')
+# Save final model (only the inner EfficientNet model)
+torch.save(model.model.state_dict(), Path(CONFIG['checkpoint_dir']) / 'final.pt')
 
 # Save metrics
 metrics_df = pd.DataFrame(metrics_history)

@@ -368,7 +368,8 @@ for epoch in range(1, CONFIG['stage1_epochs'] + 1):
     # Save best model
     if val_acc > best_val_acc_stage1:
         best_val_acc_stage1 = val_acc
-        torch.save(model.state_dict(),
+        # Save only the inner EfficientNet model (not the wrapper)
+        torch.save(model.model.state_dict(),
                   Path(CONFIG['checkpoint_dir']) / 'best_stage1.pt')
         print(f"  ✓ New best model! (Val Acc: {val_acc:.2f}%)")
 
@@ -434,14 +435,15 @@ for epoch in range(1, CONFIG['stage2_epochs'] + 1):
     # Save best model
     if val_acc > best_val_acc_stage2:
         best_val_acc_stage2 = val_acc
-        torch.save(model.state_dict(),
+        # Save only the inner EfficientNet model (not the wrapper)
+        torch.save(model.model.state_dict(),
                   Path(CONFIG['checkpoint_dir']) / 'best.pt')
         print(f"  ✓ New best compressed model! (Val Acc: {val_acc:.2f}%)")
 
     print("-" * 70)
 
-# Save final model
-torch.save(model.state_dict(),
+# Save final model (only the inner EfficientNet model)
+torch.save(model.model.state_dict(),
           Path(CONFIG['checkpoint_dir']) / 'final.pt')
 
 # Save metrics

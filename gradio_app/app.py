@@ -31,11 +31,29 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = models.efficientnet_b0(weights=None)
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)  # 4 classes
 
+# Try to load trained weights
+MODEL_TRAINED = False
+MODEL_PATH = 'checkpoints/best_multiclass.pt'
+
 try:
-    model.load_state_dict(torch.load('checkpoints/best_multiclass.pt', map_location=device))
-    print("✅ Multi-class model loaded successfully!")
+    checkpoint_path = Path(MODEL_PATH)
+    if checkpoint_path.exists():
+        model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+        print("✅ Multi-class model loaded successfully!")
+        MODEL_TRAINED = True
+    else:
+        print(f"⚠️  WARNING: Model checkpoint not found at {MODEL_PATH}")
+        print(f"⚠️  Using UNTRAINED model - predictions will be random!")
+        print(f"⚠️  Run 'python ../setup_model.py' to create the checkpoint")
+        # Initialize with ImageNet weights as fallback
+        model = models.efficientnet_b0(weights='IMAGENET1K_V1')
+        model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)
 except Exception as e:
     print(f"⚠️  Error loading model: {e}")
+    print(f"⚠️  Using UNTRAINED model - predictions will be random!")
+    # Initialize with ImageNet weights as fallback
+    model = models.efficientnet_b0(weights='IMAGENET1K_V1')
+    model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)
 
 model = model.to(device)
 model.eval()
@@ -237,7 +255,37 @@ def create_overlay_visualization(image, cam):
 def create_interpretation(pred_label, confidence, results):
     """Create interpretation text with improved medical disclaimers"""
 
-    interpretation = f"""
+    # Check if model is untrained (all confidences near 25%)
+    confidences = list(results.values())
+    is_random = max(confidences) - min(confidences) < 5  # All within 5% of each other
+
+    interpretation = ""
+
+    # Add warning if model appears untrained
+    if is_random or not MODEL_TRAINED:
+        interpretation += """
+## ⚠️ CRITICAL WARNING: UNTRAINED MODEL DETECTED
+---
+**The model is producing RANDOM predictions!**
+
+All confidence scores are approximately 25% (random guessing for 4 classes).
+
+**This means:**
+- ❌ The model has NOT been trained on medical data
+- ❌ Predictions are NOT accurate or meaningful
+- ❌ Do NOT use for any medical decisions
+
+**To fix this:**
+1. Download the COVID-QU-Ex dataset
+2. Run the training script: `python train_multiclass_simple.py`
+3. Or use a pre-trained checkpoint from the model training
+
+**Current Status:** Demo mode with ImageNet weights only
+---
+
+"""
+
+    interpretation += f"""
 ## 🔬 Analysis Results
 ### Prediction: **{pred_label}**
 - Confidence: **{confidence:.1f}%**
@@ -476,6 +524,22 @@ footer {
 
 # Create interface
 with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
+    # Warning banner if model not trained
+    if not MODEL_TRAINED:
+        gr.HTML("""
+            <div style="background: #ff4444; color: white; padding: 20px; border-radius: 10px; margin: 20px; text-align: center; border: 3px solid #cc0000;">
+                <h2 style="margin: 0 0 10px 0;">⚠️ WARNING: UNTRAINED MODEL - DEMO MODE ONLY ⚠️</h2>
+                <p style="margin: 5px 0; font-size: 1.1em;">
+                    <b>This model has NOT been trained on medical data!</b><br>
+                    Predictions will be RANDOM and meaningless (~25% for all classes).<br>
+                    <b>DO NOT USE for any medical decisions.</b>
+                </p>
+                <p style="margin: 10px 0 0 0; font-size: 0.95em;">
+                    To fix: Run <code>python ../setup_model.py</code> then train with <code>python ../train_multiclass_simple.py</code>
+                </p>
+            </div>
+        """)
+
     gr.HTML("""
         <div id="main-container">
             <div id="title">🫁 Multi-Class Chest X-Ray Detection AI</div>

@@ -14,6 +14,42 @@ license: mit
 
 **AI-powered detection of 4 respiratory diseases from chest X-rays**
 
+## ⚠️ SETUP REQUIRED BEFORE USE
+
+**If you're seeing ~25% confidence for all predictions, the model is untrained!**
+
+### Quick Setup Steps:
+
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Create model checkpoint:**
+   ```bash
+   # From repository root:
+   python setup_model.py
+   ```
+
+3. **Train the model** (requires COVID-QU-Ex dataset):
+   ```bash
+   # Download dataset: https://www.kaggle.com/datasets/anasmohammedtahir/covidqu
+
+   # Quick training (~2-3 hours):
+   python train_multiclass_simple.py
+
+   # OR Best accuracy (~8-12 hours):
+   python train_optimized_90_95.py
+   ```
+
+4. **Run the app:**
+   ```bash
+   cd gradio_app
+   python app.py
+   ```
+
+**For Hugging Face Spaces:** Upload the trained `checkpoints/best_multiclass.pt` file (use Git LFS for files >10MB)
+
 ## 🌟 Features
 
 - ✅ **4 Disease Classes**: Normal, Tuberculosis, Pneumonia, COVID-19

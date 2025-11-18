@@ -27,8 +27,8 @@ import io
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Load model
-model = models.efficientnet_b0(weights=None)
+# Load model - Using EfficientNet-B2 (trained model architecture)
+model = models.efficientnet_b2(weights=None)
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)  # 4 classes
 
 try:

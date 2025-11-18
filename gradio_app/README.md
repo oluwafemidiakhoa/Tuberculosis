@@ -38,7 +38,7 @@ license: mit
 
 ## 🔬 Technology
 
-- **Model**: EfficientNet-B0
+- **Model**: EfficientNet-B2
 - **Training**: Adaptive Sparse Training (AST)
 - **Dataset**: COVID-QU-Ex (~33,920 chest X-rays)
 - **Sparsity**: 90% (only 10% neurons active)
@@ -82,8 +82,8 @@ license: mit
 
 ## 📈 Model Evolution
 
-- **v1.0 (Beta)**: Current model - 87.29% accuracy, 100% pneumonia specificity
-- **v2.0 (Upcoming)**: Improved model targeting 92-95% accuracy with EfficientNet-B2
+- **v1.0 (Beta)**: Initial model with EfficientNet-B0 - 87.29% accuracy
+- **v2.0 (Current)**: Improved model with EfficientNet-B2 targeting 92-95% accuracy
 
 ## 🔗 Links
 

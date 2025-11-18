@@ -86,11 +86,11 @@ Using **COVID-QU-Ex Dataset** - comprehensive multi-class respiratory disease da
 ## 🛠️ Technical Architecture
 
 ### Model
-- **Backbone**: EfficientNet-B0 (pretrained on ImageNet)
+- **Backbone**: EfficientNet-B2 (pretrained on ImageNet)
 - **Training Method**: Adaptive Sparse Training (AST) with Sundew algorithm
 - **Input**: 224x224 RGB chest X-rays
 - **Output**: 4-class classification (Normal, TB, Pneumonia, COVID-19)
-- **Final Layer**: Linear(1280, 4) for multi-class prediction
+- **Final Layer**: Linear(1408, 4) for multi-class prediction
 
 ### AST Configuration
 ```python

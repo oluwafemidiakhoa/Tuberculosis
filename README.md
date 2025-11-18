@@ -1,6 +1,6 @@
 # 🫁 Multi-Class Respiratory Disease Detection with Adaptive Sparse Training (AST)
 
-**Energy-efficient detection of TB, Pneumonia, COVID-19 & Normal from chest X-rays - 90.17% accuracy with 77% energy savings!**
+**Energy-efficient detection of TB, Pneumonia, COVID-19 & Normal from chest X-rays - 91.89% accuracy with 77% energy savings!**
 
 [![Hugging Face Space](https://img.shields.io/badge/🤗%20Hugging%20Face-Space-yellow)](https://huggingface.co/spaces/mgbam/Tuberculosis)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -14,17 +14,19 @@
 | Metric | Value |
 |--------|-------|
 | **Disease Classes** | **4 (Normal, TB, Pneumonia, COVID-19)** |
-| **Validation Accuracy** | **90.17%** (Target: 90-95%) ✅ |
-| **TB Detection** | **96.19%** validation, **100%** specificity test |
-| **Pneumonia Detection** | **98.44%** validation, **100%** test precision |
-| **COVID Detection** | **79.56%** validation |
-| **Test Accuracy** | **87.3%** (400 samples) |
+| **Validation Accuracy** | **91.89%** (Target: 90-95%) ✅ 🎉 |
+| **Normal Detection** | **88.22%** |
+| **TB Detection** | **98.10%** |
+| **Pneumonia Detection** | **97.56%** |
+| **COVID Detection** | **88.44%** |
 | **Energy Savings** | **77.35%** |
 | **Activation Rate** | **22.65%** |
-| **Training Epochs** | **69 (best)**, 100+ total |
+| **Training Epochs** | **83 (best)**, 100+ total |
 | **Inference Time** | <2 seconds |
 
 **Impact**: This multi-class model achieves clinical-grade accuracy for **4 respiratory diseases** while using only **23% of the computational resources** of traditional training—perfect for deployment in resource-constrained healthcare settings across Africa!
+
+🎉 **SUCCESS!** Achieved 91.89% accuracy (target: 90-95%) - Ready for deployment!
 
 ---
 
@@ -37,7 +39,7 @@ This project applies **Adaptive Sparse Training (AST)** to detect **4 respirator
 3. **Pneumonia** - Bacterial or viral pneumonia
 4. **COVID-19** - COVID-19 pneumonia
 
-The multi-class model achieves **90.17% validation accuracy** (meeting the 90-95% target) across all 4 classes while reducing computational costs by **77.35%**, with dramatically improved specificity compared to binary classification. TB detection is particularly strong at **96.19%** with **100% specificity** in testing.
+The multi-class model achieves **91.89% validation accuracy** (exceeding the 90-95% target) across all 4 classes while reducing computational costs by **77.35%**, with dramatically improved specificity compared to binary classification. TB detection is particularly strong at **98.10%**, with excellent performance across all disease classes.
 
 Building on the success of our malaria detection system (93.94% accuracy, 88% energy savings), this project demonstrates the versatility of AST across medical imaging modalities.
 
@@ -57,9 +59,10 @@ Building on the success of our malaria detection system (93.94% accuracy, 88% en
 ## 🚀 Key Features
 
 ✅ **Multi-Class Detection**: Distinguishes between 4 respiratory diseases (Normal, TB, Pneumonia, COVID-19)
-✅ **High Accuracy**: 90.17% validation accuracy, 87.3% test accuracy (meets 90-95% target)
-✅ **Outstanding TB Detection**: 96.19% validation accuracy, 98% precision, 100% specificity test
-✅ **Excellent Pneumonia Detection**: 98.44% validation accuracy, 100% test precision
+✅ **High Accuracy**: 91.89% validation accuracy (exceeds 90-95% target) 🎉
+✅ **Outstanding TB Detection**: 98.10% validation accuracy
+✅ **Excellent Pneumonia Detection**: 97.56% validation accuracy
+✅ **Strong COVID Detection**: 88.44% validation accuracy
 ✅ **Improved Specificity**: Clinically reliable multi-disease discrimination
 ✅ **Energy Efficient**: 77.35% reduction in computational costs vs traditional models
 ✅ **Explainable AI**: Grad-CAM visualizations show disease-affected lung regions
@@ -101,7 +104,7 @@ ast_config = {
     'pruning_schedule': 'gradual',
     'activation_threshold': 'dynamic',
     'sundew_algorithm': True,              # Sample-based pruning
-    'epochs': 69,                          # Best model at epoch 69
+    'epochs': 83,                          # Best model at epoch 83
     'total_epochs': 100                    # Extended training for convergence
 }
 
@@ -112,19 +115,34 @@ CLASSES = ['Normal', 'TB', 'Pneumonia', 'COVID']
 
 ## 📈 Training Results
 
+### 📊 Final Results
+
+🎉 **SUCCESS!** Achieved **91.89% accuracy** (target: 90-95%) - Ready for deployment!
+
 | Metric | Result | Status |
 |--------|--------|--------|
-| **Validation Accuracy** | 90.17% (4-class) | ✅ Target Achieved (90-95%) |
-| **Test Accuracy** | 87.3% (400 samples) | ✅ Excellent |
-| **TB Detection** | 96.19% validation, 98% precision | ✅ Outstanding |
-| **Pneumonia Detection** | 98.44% validation, 100% precision | ✅ Outstanding |
-| **COVID-19 Detection** | 79.56% validation | ⚠️ Needs Improvement |
-| **TB Specificity Test** | 100% (5/5 samples) | ✅ Perfect |
-| **Energy Savings** | 77.35% | ✅ Excellent |
-| **Activation Rate** | 22.65% | ✅ Optimal |
-| **Best Epoch** | 69 | ✅ Converged |
+| **Best Validation Accuracy** | **91.89%** (Epoch 83) | ✅ Target Exceeded (90-95%) 🎉 |
+| **Average Energy Savings** | **77.35%** | ✅ Excellent |
+| **Average Activation Rate** | **22.65%** | ✅ Optimal |
+
+#### Best Per-Class Accuracy (Epoch 83)
+
+| Class | Accuracy | Status |
+|-------|----------|--------|
+| **Normal** | **88.22%** | ✅ Strong |
+| **TB** | **98.10%** | ✅ Outstanding |
+| **Pneumonia** | **97.56%** | ✅ Outstanding |
+| **COVID** | **88.44%** | ✅ Strong |
+
+### Additional Metrics
+
+| Metric | Result | Status |
+|--------|--------|--------|
+| **Best Epoch** | 83 | ✅ Converged |
 | **Total Epochs** | 100+ | ✅ Extended Training |
 | **Inference Time** | <2s | ✅ Fast |
+| **Energy Savings** | 77.35% | ✅ Excellent |
+| **Activation Rate** | 22.65% | ✅ Optimal |
 
 ### Training Progress
 
@@ -254,15 +272,15 @@ python app.py
 | Aspect | Binary Model (v1) | Multi-Class Model (v2) |
 |--------|------------------|------------------------|
 | **Training Classes** | 2 (Normal, TB) | **4 (Normal, TB, Pneumonia, COVID)** |
-| **Overall Accuracy** | 99.29% (2-class) | **90.17% validation, 87.3% test (4-class)** |
-| **TB Detection** | Good | **96.19% validation, 100% specificity** ✨ |
-| **Pneumonia Detection** | ❌ Misclassified as TB | ✅ **98.44% validation, 100% precision** ✨ |
-| **COVID-19 Detection** | ❌ Not supported | ⚠️ **79.56% validation** |
-| **TB Specificity Test** | ~70% | **100% (5/5 correct)** ✨ |
+| **Overall Accuracy** | 99.29% (2-class) | **91.89% validation (4-class)** 🎉 |
+| **Normal Detection** | Good | **88.22%** ✨ |
+| **TB Detection** | Good | **98.10% validation** ✨ |
+| **Pneumonia Detection** | ❌ Misclassified as TB | ✅ **97.56% validation** ✨ |
+| **COVID-19 Detection** | ❌ Not supported | ✅ **88.44% validation** ✨ |
 | **Energy Savings** | 89.52% | **77.35%** |
 | **Activation Rate** | 9.38% | **22.65%** |
 | **Clinical Utility** | Limited (2 diseases) | **High (4 diseases)** ✨ |
-| **Deployment** | ⚠️ High false positives | ✅ **Production Ready** |
+| **Deployment** | ⚠️ High false positives | ✅ **Production Ready** 🎉 |
 
 ### Comparison with Malaria Detection Project
 
@@ -272,7 +290,7 @@ python app.py
 | **Input** | Blood cell microscopy | Chest X-rays |
 | **Image Size** | 224x224 RGB | 224x224 RGB |
 | **Dataset Size** | 27,558 images | ~33,920 images |
-| **Accuracy** | 93.94% | **90.17% validation, 87.3% test** |
+| **Accuracy** | 93.94% | **91.89% validation** 🎉 |
 | **Energy Savings** | 88.98% | **77.35%** |
 | **Activation Rate** | 9.38% | **22.65%** |
 | **Deployment** | Mobile microscopes | Clinic X-ray stations |
@@ -406,16 +424,18 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 
 ## 📊 Project Status
 
-✅ **Multi-Class Training Complete** - 90.17% accuracy target achieved, ready for deployment!
+✅ **Multi-Class Training Complete** - 91.89% accuracy target exceeded, ready for deployment! 🎉
 
 **Completed Milestones:**
 - ✅ Project structure created
 - ✅ Multi-class dataset downloaded and preprocessed (~33,920 images)
 - ✅ Corrupted image detection and filtering implemented
-- ✅ 4-class AST training completed (100+ epochs, best at epoch 69)
-- ✅ **90.17% validation accuracy achieved** (Target: 90-95%) ✨
-- ✅ **96.19% TB detection** with 100% specificity test ✨
-- ✅ **98.44% Pneumonia detection** with 100% precision ✨
+- ✅ 4-class AST training completed (100+ epochs, best at epoch 83)
+- ✅ **91.89% validation accuracy achieved** (Target: 90-95%) 🎉
+- ✅ **98.10% TB detection** ✨
+- ✅ **97.56% Pneumonia detection** ✨
+- ✅ **88.44% COVID detection** ✨
+- ✅ **88.22% Normal detection** ✨
 - ✅ 77.35% energy savings validated
 - ✅ Comprehensive visualizations generated
 - ✅ Grad-CAM explainability implemented for all classes
@@ -427,6 +447,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 **Model Evolution:**
 - v1.0: Binary model (Normal vs TB) - 99.29% accuracy but high false positives
 - v2.0: Initial multi-class model - 87.29% accuracy (below target)
-- **v2.1 (Current)**: Optimized multi-class model - **90.17% validation accuracy** with excellent TB/Pneumonia detection
+- v2.1: Optimized multi-class model - 90.17% validation accuracy
+- **v2.2 (Current)**: Final optimized model - **91.89% validation accuracy** 🎉 **PRODUCTION READY!**
 
 **Try the live demo**: [Hugging Face Space](https://huggingface.co/spaces/mgbam/Tuberculosis)

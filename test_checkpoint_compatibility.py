@@ -89,11 +89,11 @@ def test_checkpoint_compatibility(checkpoint_path):
 
     # Test loading into inference model
     print(f"\n3️⃣  Testing inference app compatibility...")
-    print("   Creating EfficientNet-B0 with 4 classes...")
+    print("   Creating EfficientNet-B2 with 4 classes...")
 
     try:
         # This is exactly what the inference app does
-        model = models.efficientnet_b0(weights=None)
+        model = models.efficientnet_b2(weights=None)
         model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)
         print("   ✅ Model created")
 

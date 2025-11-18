@@ -7,7 +7,7 @@ This script converts training checkpoints that have:
 2. Extra keys like "activation_mask"
 
 To clean EfficientNet checkpoints that can be loaded directly into:
-    model = efficientnet_b0(num_classes=4)
+    model = efficientnet_b2(num_classes=4)
     model.load_state_dict(torch.load('best.pt'))
 
 Usage:
@@ -106,7 +106,7 @@ def convert_checkpoint(input_path, output_path=None, inplace=False):
         print("   This checkpoint may not be compatible with EfficientNet")
     else:
         print(f"\n✅ Checkpoint structure verified!")
-        print("   Compatible with: efficientnet_b0(num_classes=4)")
+        print("   Compatible with: efficientnet_b2(num_classes=4)")
 
     # Save the cleaned checkpoint
     if inplace:
@@ -184,13 +184,13 @@ def main():
             import torch.nn as nn
 
             # Create a dummy model
-            model = models.efficientnet_b0(weights=None)
+            model = models.efficientnet_b2(weights=None)
             model.classifier[1] = nn.Linear(model.classifier[1].in_features, 4)
 
             # Try to load the checkpoint
             model.load_state_dict(cleaned_state_dict, strict=True)
 
-            print("  ✅ Checkpoint verified! Can be loaded into EfficientNet-B0 with 4 classes")
+            print("  ✅ Checkpoint verified! Can be loaded into EfficientNet-B2 with 4 classes")
 
         except Exception as e:
             print(f"  ❌ Verification failed: {e}")
